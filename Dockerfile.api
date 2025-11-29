@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+COPY api/requirements.txt ./api/requirements.txt
+RUN pip install --no-cache-dir -r api/requirements.txt
+
+COPY api ./api
+COPY shared ./shared
+COPY config.ini ./config.ini
+
+ENV APP_DB_HOST=db \
+    APP_DB_PORT=5432 \
+    APP_DB_NAME=app \
+    APP_DB_USER=postgres \
+    APP_DB_PASSWORD=postgres
+
+EXPOSE 8000
+
+CMD ["python", "-m", "api.server"]

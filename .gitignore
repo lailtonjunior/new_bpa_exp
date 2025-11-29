@@ -1,0 +1,42 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+
+# Python envs
+env/
+venv/
+.venv/
+api/venv/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Builds
+dashboard-ui/build/
+*.egg-info
+dist/
+build/
+
+# Coverage / pytest
+.coverage
+.pytest_cache/
+
+# dotenv / secrets
+.env
+.env.local
+.env.*.local
+
+# Backups/exports
+exportados/
+
+# FastAPI/uvicorn
+*.db-journal

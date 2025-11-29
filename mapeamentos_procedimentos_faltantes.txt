@@ -1,0 +1,4 @@
+Relatório de Mapeamentos Faltantes (gerado em: 2025-11-03 08:11:00)
+================================================================================
+Código Curto: '154' (do ID no BD: 1404) precisa ser adicionado ao mapeamento.
+Código Curto: '644' (do ID no BD: 1503) precisa ser adicionado ao mapeamento.
