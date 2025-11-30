@@ -42,6 +42,8 @@ async def get_atendimentos_por_municipio(
                 m.cod_ibge as municipio_ibge,
                 m.nome as municipio_nome,
                 m.uf,
+                m.latitude,
+                m.longitude,
                 COUNT(DISTINCT p.id_paciente) as total_pacientes
             FROM sigh.pacientes p
             JOIN pacientes_periodo pp ON p.id_paciente = pp.cod_paciente

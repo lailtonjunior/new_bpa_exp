@@ -1,55 +1,35 @@
 import React from 'react';
-
-// Estilos para a tabela (reutilizados do componente de produtividade)
-const tableStyle = {
-    width: '100%',
-    borderCollapse: 'collapse',
-    marginTop: '20px',
-    fontSize: '14px',
-};
-
-const thStyle = {
-    backgroundColor: '#e9ecef',
-    color: '#495057',
-    padding: '12px',
-    border: '1px solid #dee2e6',
-    textAlign: 'left',
-};
-
-const tdStyle = {
-    padding: '12px',
-    border: '1px solid #dee2e6',
-};
+import TableWrapper from './TableWrapper';
 
 const TabelaMunicipios = ({ dados }) => {
-    if (!dados || dados.length === 0) {
-        return <p>Não há dados de municípios para o período selecionado.</p>;
-    }
+  if (!dados || dados.length === 0) {
+    return <p className="muted-text">Nǜo hǭ dados de munic��pios para o per��odo selecionado.</p>;
+  }
 
-    return (
-        <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-            <table style={tableStyle}>
-                <thead>
-                    <tr>
-                        <th style={thStyle}>#</th>
-                        <th style={thStyle}>Município</th>
-                        <th style={thStyle}>UF</th>
-                        <th style={thStyle}>Nº de Pacientes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dados.map((municipio, index) => (
-                        <tr key={municipio.municipio_ibge || index}>
-                            <td style={tdStyle}>{index + 1}</td>
-                            <td style={tdStyle}>{municipio.municipio_nome}</td>
-                            <td style={tdStyle}>{municipio.uf}</td>
-                            <td style={tdStyle}>{municipio.total_pacientes}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+  return (
+    <TableWrapper scroll>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th className="data-table__cell data-table__cell--head data-table__cell--number">#</th>
+            <th className="data-table__cell data-table__cell--head">Munic��pio</th>
+            <th className="data-table__cell data-table__cell--head">UF</th>
+            <th className="data-table__cell data-table__cell--head">N�� de Pacientes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dados.map((municipio, index) => (
+            <tr key={municipio.municipio_ibge || index}>
+              <td className="data-table__cell data-table__cell--number">{index + 1}</td>
+              <td className="data-table__cell">{municipio.municipio_nome}</td>
+              <td className="data-table__cell">{municipio.uf}</td>
+              <td className="data-table__cell">{municipio.total_pacientes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </TableWrapper>
+  );
 };
 
 export default TabelaMunicipios;

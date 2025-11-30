@@ -16,6 +16,7 @@ from .core import (
     CepMunicipio,
     PacienteLaboratorio,
 )
+from .auditoria import AuditoriaExportacao
 
 __all__ = [
     "Base",
@@ -34,4 +35,5 @@ __all__ = [
     "Municipio",
     "CepMunicipio",
     "PacienteLaboratorio",
+    "AuditoriaExportacao",
 ]

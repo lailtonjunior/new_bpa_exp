@@ -73,6 +73,7 @@ class Procedimento(Base):
     id_procedimento = sa.Column(sa.BigInteger, primary_key=True, autoincrement=True)
     codigo_procedimento = sa.Column(sa.String(10), nullable=False, unique=True)
     descricao = sa.Column(sa.String(255), nullable=True)
+    valor_procedimento = sa.Column(sa.Numeric(12, 2), nullable=False, server_default="0")
 
 
 class CID(Base):
@@ -145,6 +146,8 @@ class Municipio(Base):
     cod_ibge = sa.Column(sa.String(6), nullable=False)
     nome = sa.Column(sa.String(255), nullable=False)
     uf = sa.Column(sa.String(2), nullable=False)
+    latitude = sa.Column(sa.Numeric(10, 6), nullable=True)
+    longitude = sa.Column(sa.Numeric(10, 6), nullable=True)
 
 
 class CepMunicipio(Base):
@@ -162,3 +165,12 @@ class PacienteLaboratorio(Base):
     registro = sa.Column(sa.BigInteger, primary_key=True)
     mae = sa.Column(sa.String(255), nullable=True)
     cartao_sus = sa.Column(sa.String(15), nullable=True)
+
+
+class CBO(Base):
+    __tablename__ = "cbos"
+    __table_args__ = {"schema": "sigh", "comment": "Tabela de CBO para enriquecimento de produtividade"}
+
+    id_cbo = sa.Column(sa.BigInteger, primary_key=True, autoincrement=True)
+    codigo = sa.Column(sa.String(6), nullable=False, unique=True)
+    descricao = sa.Column(sa.String(255), nullable=False)

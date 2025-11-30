@@ -7,6 +7,15 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from tkcalendar import DateEntry
 import csv
+import logging
+import json
+import re
+from pathlib import Path
+
+from api.logging import log_export_event, setup_logging
+
+setup_logging()
+logger = logging.getLogger("exporter.bpa")
 
 
 # Importações dos módulos compartilhados
@@ -24,6 +33,8 @@ class BPAExporter:
         self.mapeamentos_faltantes_log = set()
         self.gui_log_callback = None
         self.registros_do_banco_para_indicadores = []
+        self.default_missing_action = os.getenv("PADRAO_PROCEDIMENTO_FALTANTE", "pular").lower()
+        self.faltantes_config = self._carregar_config_faltantes()
 
         self.config = {
             'orgao_responsavel': 'APAE DE COLINAS DO TOCANTINS',
@@ -45,6 +56,52 @@ class BPAExporter:
     def _log_message_gui(self, message):
         if self.gui_log_callback and callable(self.gui_log_callback):
             self.gui_log_callback(message)
+        logger.info(message)
+
+    def _carregar_config_faltantes(self):
+        """
+        Le mapeamentos faltantes em JSON; se ausente, tenta converter TXT legado.
+        """
+        repo_root = Path(__file__).resolve().parent
+        json_path = repo_root / "api" / "config" / "procedimentos_faltantes.json"
+        txt_path = repo_root / "mapeamentos_procedimentos_faltantes.txt"
+        if json_path.exists():
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                return {str(item.get("codigo")): item for item in data if item.get("codigo")}
+            except Exception:
+                logger.exception("Falha ao ler JSON de procedimentos faltantes: %s", json_path)
+                return {}
+        if txt_path.exists():
+            try:
+                entries = []
+                pattern = re.compile(r"(?P<codigo>\\d+)")
+                for line in txt_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                    if "Codigo" in line or "C" in line:
+                        found = pattern.findall(line)
+                        if found:
+                            codigo = found[0]
+                            entries.append({"codigo": codigo, "descricao": f"Procedimento faltante codigo curto {codigo}", "acao": "pular"})
+                if entries:
+                    json_path.parent.mkdir(parents=True, exist_ok=True)
+                    with open(json_path, "w", encoding="utf-8") as f:
+                        json.dump(entries, f, ensure_ascii=False, indent=2)
+                    logger.info("Convertido TXT legado para JSON de faltantes em %s", json_path)
+                    return {str(item.get("codigo")): item for item in entries}
+            except Exception:
+                logger.exception("Falha ao converter TXT legado de procedimentos faltantes")
+        return {}
+
+    def _resolver_procedimento_faltante(self, codigo_curto, id_bd):
+        cfg = self.faltantes_config.get(str(codigo_curto)) or {}
+        acao = (cfg.get("acao") or self.default_missing_action or "pular").lower()
+        substituto = cfg.get("substituto") if isinstance(cfg, dict) else None
+        logger.warning(
+            "Procedimento faltante encontrado",
+            extra={"codigo_curto": codigo_curto, "id_bd": id_bd, "acao": acao, "substituto": substituto},
+        )
+        return acao, substituto
 
     def _build_sql_completo(self, coluna_data_filtro, alias_tabela_filtro="l"):
         return f"""
@@ -154,6 +211,7 @@ class BPAExporter:
             registros_do_banco = [dict(row._mapping) for row in result.fetchall()]
             self.registros_do_banco_para_indicadores = registros_do_banco
             self._log_message_gui(f"Consulta SQL retornou {len(registros_do_banco)} linhas brutas.")
+            log_export_event(logger, "consulta_principal", batch_size=len(registros_do_banco), status="fetched", criterio=criterio_data)
 
             if not registros_do_banco: return [], {}, 0
 
@@ -180,6 +238,14 @@ class BPAExporter:
                         self.mapeamentos_faltantes_log.add((codigo_curto or f"ID_BD:{reg.get('cod_proc')}", str(reg.get('cod_proc'))))
             
             self._log_message_gui(f"Classificação: {len(registros_bpa)} procedimentos para BPA, {len(registros_apac)} para APAC (ignorados).")
+
+            log_export_event(
+                logger,
+                "classificacao_procedimentos",
+                batch_size=len(registros_bpa),
+                status="ok",
+                apac_ignorados=len(registros_apac),
+            )
 
             if registros_bpa:
                 registros_processados = self.processar_registros_bpa_i_completo(registros_bpa, competencia_gui)

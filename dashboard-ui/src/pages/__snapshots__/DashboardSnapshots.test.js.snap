@@ -1,0 +1,264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots dos dashboards Assistencial com dados 1`] = `
+<DocumentFragment>
+  <div
+    class="page"
+  >
+    <h1
+      class="page__title"
+    >
+      Dashboard Assistencial
+    </h1>
+    <div
+      class="stack"
+    >
+      <div
+        class="stack"
+      >
+        <div
+          class="filter-panel"
+        >
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-inicio"
+            >
+              Data de Inicio
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-inicio"
+              type="date"
+              value="2025-10-01"
+            />
+          </div>
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-fim"
+            >
+              Data de Fim
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-fim"
+              type="date"
+              value="2025-11-01"
+            />
+          </div>
+          <div
+            class="filter-panel__actions"
+          >
+            <button
+              class="btn btn--primary"
+            >
+              Aplicar Filtro
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="section"
+      >
+        <div
+          data-testid="grafico-barras"
+        >
+          Top 15 Diagnosticos (CID-10)
+        </div>
+      </div>
+      <div
+        class="grid-responsive"
+      >
+        <div
+          class="section"
+        >
+          <div
+            data-testid="grafico-piramide"
+          >
+            Piramide Etaria de Pacientes
+          </div>
+        </div>
+        <div
+          class="section"
+        >
+          <div
+            data-testid="grafico-donut"
+          >
+            Prevalencia de Deficiencias
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`snapshots dos dashboards Produtividade com dados 1`] = `
+<DocumentFragment>
+  <div
+    class="page"
+  >
+    <h1
+      class="page__title"
+    >
+      Dashboard de Produtividade
+    </h1>
+    <div
+      class="stack"
+    >
+      <div
+        class="stack"
+      >
+        <div
+          class="filter-panel"
+        >
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-inicio"
+            >
+              Data de Inicio
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-inicio"
+              type="date"
+              value="2025-10-01"
+            />
+          </div>
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-fim"
+            >
+              Data de Fim
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-fim"
+              type="date"
+              value="2025-11-01"
+            />
+          </div>
+          <div
+            class="filter-panel__actions"
+          >
+            <button
+              class="btn btn--primary"
+            >
+              Aplicar Filtro
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="section"
+      >
+        <div
+          data-testid="tabela-produtividade"
+        >
+          total: 2
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`snapshots dos dashboards Territorial com dados 1`] = `
+<DocumentFragment>
+  <div
+    class="page"
+  >
+    <h1
+      class="page__title"
+    >
+      Dashboard Territorial
+    </h1>
+    <div
+      class="stack"
+    >
+      <div
+        class="stack"
+      >
+        <div
+          class="filter-panel"
+        >
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-inicio"
+            >
+              Data de Inicio
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-inicio"
+              type="date"
+              value="2025-10-01"
+            />
+          </div>
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-fim"
+            >
+              Data de Fim
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-fim"
+              type="date"
+              value="2025-11-01"
+            />
+          </div>
+          <div
+            class="filter-panel__actions"
+          >
+            <button
+              class="btn btn--primary"
+            >
+              Aplicar Filtro
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid-duo"
+      >
+        <div
+          class="section"
+        >
+          <div
+            data-testid="mapa-territorial"
+          >
+            municipios: 2
+          </div>
+        </div>
+        <div
+          class="section"
+        >
+          <div
+            data-testid="tabela-municipios"
+          >
+            municipios: 2
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

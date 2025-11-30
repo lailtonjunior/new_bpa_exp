@@ -5,10 +5,16 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from tkcalendar import DateEntry
 from sqlalchemy import text
+import logging
+
+from api.logging import log_export_event, setup_logging
 
 # Importa a classe de conexão e o mapeamento do módulo compartilhado
 from shared.database import Database
 from shared.mapeamento_procedimentos import carregar_tabela_procedimentos_cid
+
+setup_logging()
+logger = logging.getLogger("exporter.apac")
 
 class APACExporter:
     """
@@ -30,6 +36,7 @@ class APACExporter:
     def _log_message_gui(self, message):
         if self.gui_log_callback and callable(self.gui_log_callback):
             self.gui_log_callback(message)
+        logger.info(message, extra={"event": "export_message"})
     
     def carregar_mapeamento_procedimentos(self, cod_procs_bd_unicos):
         """Carrega o mapeamento de 'cod_proc' (ID) para 'codigo_procedimento' (código curto)."""
@@ -111,6 +118,7 @@ class APACExporter:
         if not self.conn: return False, "Sem conexão com o banco."
         try:
             self._log_message_gui("Iniciando consulta de dados...")
+            log_export_event(logger, "consulta_apac_inicio", status="started")
             sql = self._build_sql_apac(params_execucao['data_inicio'], params_execucao['data_fim'])
             result = self.conn.execute(text(sql))
             registros_brutos = [dict(row._mapping) for row in result.fetchall()]
@@ -154,6 +162,12 @@ class APACExporter:
                 return False, "Nenhum procedimento de APAC encontrado (após o filtro)."
 
             registros_apac_deduplicados = self.deduplicate_por_id_lancamento_original(registros_apac_filtrados)
+            log_export_event(
+                logger,
+                "apac_filtrados",
+                batch_size=len(registros_apac_deduplicados),
+                status="ok",
+            )
 
             self._log_message_gui("Agrupando procedimentos por paciente...")
             pacientes_com_procedimentos = {}
@@ -166,13 +180,18 @@ class APACExporter:
 
             self._log_message_gui("Gerando arquivo APAC formatado...")
             sucesso, resultado = self.gerar_arquivo_apac_formatado(pacientes_com_procedimentos, params_execucao)
+            log_export_event(
+                logger,
+                "arquivo_apac",
+                batch_size=len(pacientes_com_procedimentos),
+                status="success" if sucesso else "error",
+                caminho=params_execucao.get('caminho_arquivo'),
+            )
             return sucesso, resultado
 
         except Exception as e:
             error_msg = f"Erro fatal ao processar e gerar APAC: {e}"
-            print(error_msg)
-            import traceback
-            traceback.print_exc()
+            logger.exception(error_msg, extra={"event": "export_error"})
             self._log_message_gui(error_msg)
             return False, str(e)
 

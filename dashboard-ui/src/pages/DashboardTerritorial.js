@@ -3,6 +3,8 @@ import MapaTerritorial from '../components/MapaTerritorial';
 import TabelaMunicipios from '../components/TabelaMunicipios';
 import FiltroPeriodo from '../components/FiltroPeriodo';
 import fetchData from '../services/api';
+import LoadingBlock from '../components/LoadingBlock';
+import CardError from '../components/CardError';
 
 const DashboardTerritorial = () => {
     const [dados, setDados] = useState([]);
@@ -30,32 +32,27 @@ const DashboardTerritorial = () => {
         loadData();
     }, [loadData]);
 
-    const layoutStyle = {
-        display: 'grid',
-        gridTemplateColumns: '2fr 1fr',
-        gap: '20px',
-        marginTop: '20px',
-    };
-
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Dashboard Territorial</h1>
-            <FiltroPeriodo onFilterChange={handleFilterChange} />
-            
-            {loading ? (
-                <p>Carregando dados geograficos para o periodo...</p>
-            ) : error ? (
-                <p style={{ color: 'red' }}>Erro ao carregar dados: {error}</p>
-            ) : (
-                <div style={layoutStyle}>
-                    <div>
-                        <MapaTerritorial dados={dados} />
+        <div className="page">
+            <h1 className="page__title">Dashboard Territorial</h1>
+            <div className="stack">
+                <FiltroPeriodo onFilterChange={handleFilterChange} />
+                
+                {loading ? (
+                    <LoadingBlock size="xl" />
+                ) : error ? (
+                    <CardError message={`Erro ao carregar dados: ${error}`} />
+                ) : (
+                    <div className="grid-duo">
+                        <div className="section">
+                            <MapaTerritorial dados={dados} />
+                        </div>
+                        <div className="section">
+                            <TabelaMunicipios dados={dados} />
+                        </div>
                     </div>
-                    <div>
-                        <TabelaMunicipios dados={dados} />
-                    </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

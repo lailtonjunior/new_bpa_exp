@@ -6,16 +6,7 @@ import fetchData from '../services/api';
 import { formatCurrency, formatNumber } from '../utils/formatters';
 import LoadingBlock from '../components/LoadingBlock';
 import EmptyState from '../components/EmptyState';
-
-const dashboardStyle = {
-  padding: '20px',
-};
-
-const containerStyle = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-};
+import CardError from '../components/CardError';
 
 const DashboardExecutivo = () => {
   const [kpis, setKpis] = useState(null);
@@ -74,18 +65,19 @@ const DashboardExecutivo = () => {
   }, [loadData]);
 
   return (
-    <div style={dashboardStyle}>
-      <h1>Dashboard Executivo</h1>
-      
-      <FiltroPeriodo onFilterChange={handleFilterChange} />
+    <div className="page">
+      <h1 className="page__title">Dashboard Executivo</h1>
 
-      {loading ? (
-          <LoadingBlock height="260px" />
-      ) : error ? (
-          <p style={{ color: 'red' }}>Falha ao carregar dados: {error}</p>
-      ) : (
+      <div className="stack">
+        <FiltroPeriodo onFilterChange={handleFilterChange} />
+
+        {loading ? (
+          <LoadingBlock size="lg" />
+        ) : error ? (
+          <CardError message={`Falha ao carregar dados: ${error}`} />
+        ) : (
           <>
-            <div style={containerStyle}>
+            <div className="kpi-grid">
               <CardKPI 
                 title="Total de Atendimentos no Periodo" 
                 value={formatNumber(kpis?.total_atendimentos_mes ?? 0)}
@@ -99,16 +91,20 @@ const DashboardExecutivo = () => {
                 value={formatCurrency(kpis?.faturamento_estimado_mes ?? 0)}
               />
             </div>
-            {graficoData ? (
-              <GraficoAtendimentos 
-                  chartData={graficoData}
-                  chartTitle="Evolucao Mensal"
-              />
-            ) : (
-              <EmptyState message="Sem dados de atendimentos para o periodo selecionado." />
-            )}
+
+            <div className="section">
+              {graficoData ? (
+                <GraficoAtendimentos 
+                    chartData={graficoData}
+                    chartTitle="Evolucao Mensal"
+                />
+              ) : (
+                <EmptyState message="Sem dados de atendimentos para o periodo selecionado." />
+              )}
+            </div>
           </>
-      )}
+        )}
+      </div>
     </div>
   );
 };

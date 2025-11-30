@@ -6,10 +6,17 @@ from sqlalchemy.engine import Connection
 
 from .config import get_allowed_origins
 from .database_connector import get_db_connection
-from .routers import indicadores_assistencial, indicadores_executivo, indicadores_produtividade, indicadores_territorial
+from .logging import create_request_id_middleware, metrics_response, setup_logging
+from .routers import (
+    indicadores_assistencial,
+    indicadores_executivo,
+    indicadores_produtividade,
+    indicadores_territorial,
+    auditoria_exportacao,
+)
 from .security import verify_api_key
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
+setup_logging()
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
@@ -26,19 +33,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.middleware("http")(create_request_id_middleware())
+
 # Routers
 app.include_router(indicadores_executivo.router)
 app.include_router(indicadores_assistencial.router)
 app.include_router(indicadores_produtividade.router)
 app.include_router(indicadores_territorial.router)
+app.include_router(auditoria_exportacao.router)
 
-
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    logger.info("REQUEST %s %s", request.method, request.url.path)
-    response = await call_next(request)
-    logger.info("RESPONSE %s %s -> %s", request.method, request.url.path, response.status_code)
-    return response
 
 
 @app.get("/", tags=["Health"])
@@ -60,3 +63,8 @@ def ready(conn: Connection = Depends(get_db_connection)):
     except Exception as exc:
         logger.exception("Readiness check failed")
         raise HTTPException(status_code=503, detail=f"Database not ready: {exc}")
+
+
+@app.get("/metrics", include_in_schema=False)
+def metrics():
+    return metrics_response()

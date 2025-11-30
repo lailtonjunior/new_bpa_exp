@@ -39,7 +39,7 @@ async def get_ranking_profissionais(
             SELECT 
                 pr.nm_prestador as profissional_nome,
                 pr.cns as cns_profissional,
-                NULL as cbo_descricao,
+                cbo.descricao as cbo_descricao,
                 COUNT(l.id_lancamento) as total_atendimentos,
                 COUNT(DISTINCT fi.cod_paciente) as pacientes_unicos,
                 ROUND(COUNT(l.id_lancamento)::numeric / :num_dias, 2) as media_diaria_atendimentos
@@ -47,6 +47,8 @@ async def get_ranking_profissionais(
             JOIN sigh.contas AS c ON l.cod_conta = c.id_conta
             JOIN sigh.ficha_amb_int AS fi ON c.cod_fia = fi.id_fia
             JOIN sigh.prestadores AS pr ON l.cod_prestador = pr.id_prestador
+            LEFT JOIN sigh.v_cons_prestadores_cbos_scola vpc ON pr.id_prestador = vpc.id_prestador
+            LEFT JOIN sigh.cbos cbo ON vpc.codigo_cbo = cbo.codigo
             WHERE l.data BETWEEN :data_inicio AND :data_fim
               AND c.ativo = 't'
               AND c.status_conta = 'A'

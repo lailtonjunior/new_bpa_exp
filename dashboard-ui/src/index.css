@@ -1,20 +1,29 @@
+:root {
+  color-scheme: light;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa; /* Um cinza claro de fundo */
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #343a40; /* Um cinza mais escuro para titulos */
+  color: var(--color-text);
+  font-weight: var(--font-weight-headings);
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
 }
 
 @keyframes shine {

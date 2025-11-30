@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TabelaProdutividade from '../components/TabelaProdutividade';
 import FiltroPeriodo from '../components/FiltroPeriodo';
 import fetchData from '../services/api';
+import LoadingBlock from '../components/LoadingBlock';
+import CardError from '../components/CardError';
 
 const DashboardProdutividade = () => {
     const [dadosProdutividade, setDadosProdutividade] = useState([]);
@@ -30,16 +32,18 @@ const DashboardProdutividade = () => {
     }, [loadData]);
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Dashboard de Produtividade</h1>
-            <FiltroPeriodo onFilterChange={handleFilterChange} />
-            <div style={{ marginTop: '20px' }}>
-                {loading 
-                    ? <p>Carregando ranking de produtividade para o periodo...</p>
-                    : error 
-                        ? <p style={{ color: 'red' }}>Erro: {error}</p>
-                        : <TabelaProdutividade dados={dadosProdutividade} />
-                }
+        <div className="page">
+            <h1 className="page__title">Dashboard de Produtividade</h1>
+            <div className="stack">
+                <FiltroPeriodo onFilterChange={handleFilterChange} />
+                <div className="section">
+                    {loading 
+                        ? <LoadingBlock size="md" />
+                        : error 
+                            ? <CardError message={`Erro: ${error}`} />
+                            : <TabelaProdutividade dados={dadosProdutividade} />
+                    }
+                </div>
             </div>
         </div>
     );

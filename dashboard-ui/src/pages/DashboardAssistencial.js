@@ -4,6 +4,8 @@ import GraficoPiramideEtaria from '../components/GraficoPiramideEtaria';
 import GraficoDonut from '../components/GraficoDonut';
 import FiltroPeriodo from '../components/FiltroPeriodo';
 import fetchData from '../services/api';
+import LoadingBlock from '../components/LoadingBlock';
+import CardError from '../components/CardError';
 
 const DashboardAssistencial = () => {
     const [diagnosticosData, setDiagnosticosData] = useState(null);
@@ -68,40 +70,39 @@ const DashboardAssistencial = () => {
         loadAllData();
     }, [loadAllData]);
 
-    const gridStyle = {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-        gap: '40px',
-        marginTop: '20px',
-    };
-
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Dashboard Assistencial</h1>
-            <FiltroPeriodo onFilterChange={handleFilterChange} />
-            
-            {loading ? <p>Carregando dados para o periodo...</p> : error ? (
-                <p style={{ color: 'red' }}>Erro ao carregar dados: {error}</p>
-            ) : (
-                <>
-                    <div style={{ marginTop: '20px' }}>
-                        <GraficoBarrasHorizontais 
-                            chartData={diagnosticosData} 
-                            chartTitle="Top 15 Diagnosticos (CID-10)" 
-                        />
-                    </div>
-                    <div style={gridStyle}>
-                        <GraficoPiramideEtaria 
-                            chartData={perfilEtarioData} 
-                            chartTitle="Piramide Etaria de Pacientes"
-                        />
-                        <GraficoDonut
-                            chartData={prevalenciaData}
-                            chartTitle="Prevalencia de Deficiencias"
-                        />
-                    </div>
-                </>
-            )}
+        <div className="page">
+            <h1 className="page__title">Dashboard Assistencial</h1>
+            <div className="stack">
+                <FiltroPeriodo onFilterChange={handleFilterChange} />
+                
+                {loading ? <LoadingBlock size="md" /> : error ? (
+                    <CardError message={`Erro ao carregar dados: ${error}`} />
+                ) : (
+                    <>
+                        <div className="section">
+                            <GraficoBarrasHorizontais 
+                                chartData={diagnosticosData} 
+                                chartTitle="Top 15 Diagnosticos (CID-10)" 
+                            />
+                        </div>
+                        <div className="grid-responsive">
+                            <div className="section">
+                                <GraficoPiramideEtaria 
+                                    chartData={perfilEtarioData} 
+                                    chartTitle="Piramide Etaria de Pacientes"
+                                />
+                            </div>
+                            <div className="section">
+                                <GraficoDonut
+                                    chartData={prevalenciaData}
+                                    chartTitle="Prevalencia de Deficiencias"
+                                />
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
     );
 };

@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardExecutivo gera snapshot com dados carregados 1`] = `
+<DocumentFragment>
+  <div
+    class="page"
+  >
+    <h1
+      class="page__title"
+    >
+      Dashboard Executivo
+    </h1>
+    <div
+      class="stack"
+    >
+      <div
+        class="stack"
+      >
+        <div
+          class="filter-panel"
+        >
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-inicio"
+            >
+              Data de Inicio
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-inicio"
+              type="date"
+              value="2025-10-01"
+            />
+          </div>
+          <div
+            class="filter-panel__group"
+          >
+            <label
+              class="filter-panel__label"
+              for="data-fim"
+            >
+              Data de Fim
+            </label>
+            <input
+              class="filter-panel__input"
+              id="data-fim"
+              type="date"
+              value="2025-11-01"
+            />
+          </div>
+          <div
+            class="filter-panel__actions"
+          >
+            <button
+              class="btn btn--primary"
+            >
+              Aplicar Filtro
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="kpi-grid"
+      >
+        <div
+          class="card card--kpi"
+        >
+          <h3
+            class="card__title"
+          >
+            Total de Atendimentos no Periodo
+          </h3>
+          <p
+            class="card__value"
+          >
+            1.200
+          </p>
+        </div>
+        <div
+          class="card card--kpi"
+        >
+          <h3
+            class="card__title"
+          >
+            Pacientes unicos no Periodo
+          </h3>
+          <p
+            class="card__value"
+          >
+            800
+          </p>
+        </div>
+        <div
+          class="card card--kpi"
+        >
+          <h3
+            class="card__title"
+          >
+            Faturamento Estimado (BPA/APAC)
+          </h3>
+          <p
+            class="card__value"
+          >
+            R$ 98.765,43
+          </p>
+        </div>
+      </div>
+      <div
+        class="section"
+      >
+        <div
+          data-testid="grafico-atendimentos"
+        >
+          <span>
+            Evolucao Mensal
+          </span>
+          <pre>
+            {"labels":["2024-01","2024-02"],"datasets":[{"label":"Total de Atendimentos","data":[100,200],"borderColor":"rgb(54, 162, 235)","backgroundColor":"rgba(54, 162, 235, 0.5)"},{"label":"Pacientes unicos","data":[50,120],"borderColor":"rgb(255, 99, 132)","backgroundColor":"rgba(255, 99, 132, 0.5)"}]}
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
